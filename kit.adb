@@ -1,5 +1,5 @@
-with Ada.Text_Io, Ada.Integer_Text_Io, Ada.Float_Text_Io;
-use  Ada.Text_Io, Ada.Integer_Text_Io, Ada.Float_Text_Io;
+with Ada.Text_Io, Ada.Integer_Text_Io, Ada.Float_Text_Io, employe;
+use  Ada.Text_Io, Ada.Integer_Text_Io, Ada.Float_Text_Io, employe;
 
 package body Kit is
 	
@@ -16,7 +16,7 @@ Begin
 	end if;
 end Compare_IdKit;
 
-Procedure Saisie_Nature (nat: in out T_Nature) is
+Procedure Saisie_Nature (nat: out T_Nature) is
 	option: integer;
 	Begin
 		put_line("Veuillez saisir la nature du kit");
@@ -37,35 +37,33 @@ Procedure Saisie_Nature (nat: in out T_Nature) is
 end Saisie_Nature;
 
 
-Procedure Saisie_Kit (K : in out T_Kit; L : in out T_Liste_Kit; dateDuJour : in T_Date) is
-	datePeremption : T_Date;
+Procedure Saisie_Kit (K : in out T_Kit; tete : in out T_Liste_Kit; dateDuJour: in T_Date) is
 	bool : boolean;
-Begin
-	Saisie_Nature(K.Nature);
-	put_line("Veuillez saisir l'identifiant du kit");
-	loop
-	   get(K.Identifiant); skip_line;
-	   bool:=Compare_IdKit(L,K.Identifiant);
-	   exit when bool;
-	   put("Identifiant déja utlisé, ressaisissez..");
-	end loop;  
-	put_line("Veuillez saisir la date de péremption du kit");
-	loop
-		Saisie_T_Date(datePeremption);
-		bool:=Compare_T_Date(datePeremption, dateDuJour);
-		exit when bool;
-		put("La date de peremption du kit est inférieure ou égale à la date du jour, ressaisissez..");
-	end loop;
+	Begin
+		Saisie_Nature(K.Nature);
+		put_line("Veuillez saisir l'identifiant du kit");
+		loop
+			get(K.Identifiant); skip_line;
+	   	 	bool:=Compare_IdKit(tete, K.Identifiant);
+	   	 	exit when bool;
+	   	 	put("Identifiant déja utlisé, ressaisissez..");
+		end loop;  
+		put_line("Veuillez saisir la date de péremption du kit");
+		loop
+			Saisie_T_Date(K.date_Peremption);
+			bool:=Compare_T_Date(K.date_Peremption, dateDuJour);
+			exit when bool;
+			put("La date de peremption du kit est inférieure ou égale à la date du jour, ressaisissez..");
+		end loop;
 end Saisie_Kit;
 
 -------------------------------------------------------------------------------------------- 
  
-Procedure Ajout_Kit (tete : in out T_Liste_Kit; K : out T_Kit; L : in out T_Liste_Kit; dateDuJour : in T_Date) is
-	unKit:T_Liste_Kit;
-	Begin
-		Saisie_Kit(K, L, dateDuJour);
-		unKit:=new T_UnKit'(K,tete);
-		tete:=unKit;
+Procedure Ajout_Kit(Ltete: in out T_tete_Liste_Kit; dateDuJour: in T_Date) is
+	K:T_Kit;
+	Begin	
+		Saisie_Kit(K, Ltete.tete, dateDuJour);
+		Ltete.tete:=new T_UnKit'(K,Ltete.tete);
 end Ajout_Kit;
    
 -------------------------------------------------------------------------------------------- 
@@ -120,23 +118,37 @@ End Affiche_Kit;
 
 -------------------------------------------------------------------------------------------- 			
 
-Function kit_disponible(K: T_Liste_Kit; Nature: T_Nature) return T_Liste_Kit is 
-	bool:boolean;
+Function kit_disponible(K, neuf: in out T_Liste_Kit; Nature: T_Nature) return T_Liste_Kit is 
 	Begin
-		if K=NULL then
+		if K=NULL and neuf=NULL then
 			return NULL;
+		elsif K=NULL then
+			if neuf.Kit.Utilise=false and neuf.Kit.Nature=Nature then
+				return neuf;
+			else 
+				return NULL;
+		end if;
 		else
 			if K.Kit.Utilise=false and K.Kit.Nature=Nature then
-				return K;
-			else
-				return kit_disponible(K.suiv,Nature);
+				if neuf.Kit.Nb_utilisation>K.Kit.Nb_utilisation then
+					neuf:=K;
+				end if;
 			end if;
+			return kit_disponible(K.suiv, neuf, Nature);
 		end if;
-	end kit_disponible
-				
-				
-
-
+end kit_disponible;
+	
+Procedure KitPerime(dateDuJour: in T_Date; K: in out T_Liste_Kit) is
+	bool:boolean;
+	Begin
+		if K=/NULL then
+			bool:=Compare_T_Date(K.Kit.Date_peremption, dateDuJour);
+			if bool=false then 
+				Delete_Kit(K, K.Kit.Identifiant);
+			end if;
+			KitPerime(dateDuJour, K.suiv);
+		end if;
+end KitPerime;
 
 
 

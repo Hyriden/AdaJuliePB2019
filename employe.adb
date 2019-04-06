@@ -85,9 +85,8 @@ end Saisie_profession;
 
 ---------------------------------------------------------------------------------------  
 	
-Procedure Saisie_Employe (E: out T_Employe) is
-	Begin
-	
+Procedure Saisie_Employe (E: in out T_Employe) is
+	Begin	
 	Put_line("Veuillez saisir le nom de l'employé");
 	Saisie_T_Mot(E.NomE);
 	
@@ -100,12 +99,11 @@ Procedure Saisie_Employe (E: out T_Employe) is
 
 ---------------------------------------------------------------------------------------  
 
-Procedure Recrutement (tete : in out T_Liste_Employe; E : out T_Employe) is
-	unEmploye:T_Liste_Employe;
+Procedure Recrutement (tete : in out T_Liste_Employe) is
+	E : T_Employe;
 	Begin
 		Saisie_Employe(E);
-		unEmploye:=new T_UnEmploye'(E,tete);
-		tete:=unEmploye;
+		tete:=new T_UnEmploye'(E,tete);
 end Recrutement;
 
 ---------------------------------------------------------------------------------------      
@@ -189,19 +187,28 @@ end Depart_Conges;
 
 ---------------------------------------------------------------------------------------  
 
-Function employe_disponible(E: T_Liste_Employe; Profession: boolean) return T_Liste_Employe is 
-	bool:=boolean;
+Function employe_disponible(E, noob: in out T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe is 
+	bool: boolean;
 	Begin
-		if E = NULL then
+		if E=NULL and noob=NULL then
 			return NULL;
-		else
-			bool:=Compare(E.Employe.Retour, dateDuJour);
-			if E.Employe.Profession=Profession and bool=false and E.Employe.Disponible=true then
-				return E;
+		elsif E=NULL then
+			bool:=Compare_T_Date(noob.Employe.Retour, dateDuJour);
+			if noob.Employe.Profession=Profession and bool=false and noob.Employe.Disponible=true then
+				return noob;
 			else
-				return employe_disponible(E.suiv,Profession);
+				return NULL;
 			end if;
+		else
+			bool:=Compare_T_Date(E.Employe.Retour, dateDuJour);
+			if E.Employe.Profession=Profession and bool=false and E.Employe.Disponible=true then
+				if noob.Employe.Nb_jours_audit>E.Employe.Nb_jours_audit then
+					noob:=E;
+				end if;
+			end if;
+		return employe_disponible(E.suiv, noob, Profession, dateDuJour);
 		end if;
+end employe_disponible;
 end employe;
 
 

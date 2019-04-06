@@ -1,5 +1,5 @@
-with Ada.Text_Io, Ada.Integer_Text_Io, Ada.Float_Text_Io;
-use  Ada.Text_Io, Ada.Integer_Text_Io, Ada.Float_Text_Io;
+with Ada.Text_Io, Ada.Integer_Text_Io, Ada.Float_Text_Io, employe;
+use  Ada.Text_Io, Ada.Integer_Text_Io, Ada.Float_Text_Io, employe;
 
 package body entreprise is
 	
@@ -55,6 +55,24 @@ Procedure Suppr_Entreprise (L: in out T_Liste_Entreprise) is
 		Saisie_T_Mot(nomE); new_line;
 		Delete_Entreprise(L, nomE);      
 end Suppr_Entreprise;
+
+Function retournePtENtreprise(L: T_Liste_Entreprise; Entreprise: T_Mot) return T_Liste_Entreprise is
+	Begin
+		if L=NULL then
+			put("ERREUR ENTREPRISE INEXISTANTE");
+			return NULL;
+		else
+			if L.Entreprise.Nom=Entreprise then
+				return L;
+			else
+				return retournePtENtreprise(L.suiv, Entreprise);
+			end if;		
+		end if;
+end retournePtENtreprise;
+		
+
+
+
 
 end entreprise;
 

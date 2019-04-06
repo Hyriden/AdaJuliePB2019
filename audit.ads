@@ -52,10 +52,12 @@ Package audit is
 	Function Compare_NumeroAudit(F:T_File_Demande; Numero: Integer) return boolean;
 	Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Date);
 	Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; dateDuJour : in T_Date);
+	Procedure Supprime_Urgence_demande_audit (Urgence: in out T_TF_File_Demande; Numero: in integer);
+	Procedure Supprime_Routine_demande_audit (Routine: in out T_TF_File_Demande; Numero: in integer);	
 	Procedure Affiche_liste_audit (File: in out T_File_Demande);
-	
-	
-	
+	Procedure Insertion_liste_audit_en_cours (Urgence, Routine: in out T_TF_File_Demande; dateDuJour: in T_Date; EnCours: in out T_TF_Liste_Audit; LEtete: in out T_tete_Liste_Employe; LKtete: in out T_tete_Liste_Kit; LEntete: in out T_tete_Liste_Entreprise);
+	Procedure Ajout_en_cours(AeC: in T_Audit_en_cours; EnCours: in out T_TF_Liste_Audit);
+	Procedure Affiche_audit_en_cours (L: in out T_Liste_Audit);
 	
 	
 end audit;

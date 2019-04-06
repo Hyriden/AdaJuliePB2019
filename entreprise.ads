@@ -19,10 +19,16 @@ Type T_UneEntreprise is record
     Suiv : T_Liste_Entreprise ;
 end record ; 
 
+Type T_tete_Liste_Entreprise is record 
+	tete:T_Liste_Entreprise;
+end record;
+
 -- Fonctions et procédures
 Procedure Saisie_Entreprise (E : out T_Entreprise);
 Procedure Ajout_Entreprise (Tete : in out T_Liste_Entreprise);
 Procedure Suppr_Entreprise (L: in out T_Liste_Entreprise);
+Function retournePtENtreprise(L: T_Liste_Entreprise; Entreprise: T_Mot) return T_Liste_Entreprise;
+
 
 end entreprise;
 

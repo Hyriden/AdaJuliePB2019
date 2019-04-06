@@ -1,5 +1,5 @@
-with ada.text_io, ada.integer_text_io,ada.Float_Text_IO;
-use  ada.text_io, ada.integer_text_io,ada.Float_Text_IO;
+with ada.text_io, ada.integer_text_io, ada.Float_Text_IO;
+use  ada.text_io, ada.integer_text_io, ada.Float_Text_IO;
 
 package employe is
    
@@ -29,6 +29,10 @@ package employe is
 		Employe : T_Employe ;
 		Suiv : T_Liste_Employe ; 
 	end record ;
+	
+	Type T_tete_Liste_Employe is record 
+		tete:T_Liste_Employe;
+	end record;
 
 
 -- Fonctions et procedures
@@ -36,12 +40,12 @@ Procedure Saisie_T_Mot(mot: out T_Mot);
 Procedure Saisie_T_Date(date: out T_Date);
 Function Compare_T_Date(date1, date2: T_Date) return boolean;
 Function Saisie_Profession return boolean;
-Procedure Saisie_Employe (E: out T_Employe);
-Procedure Recrutement (tete : in out T_Liste_Employe; E : out T_Employe);
+Procedure Saisie_Employe (E: in out T_Employe);
+Procedure Recrutement (tete : in out T_Liste_Employe);
 Procedure Depart (l: in out T_Liste_Employe);
 Procedure Affiche_Employe (L: in out T_Liste_Employe);
 Procedure Depart_Conges (E: out T_Employe; L: in out T_Liste_Employe; dateRetour: out T_Date; dateDuJour : T_Date);
-Function employe_disponible(E: T_Liste_Employe; Profession: boolean) return T_Liste_Employe;
+Function employe_disponible(E, noob: in out T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe;
 
 
 end employe;

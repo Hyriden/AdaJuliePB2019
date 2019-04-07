@@ -134,7 +134,7 @@ End Affiche_Kit;
 
 -------------------------------------------------------------------------------------------- 			
 
-Function kit_disponible(K, neuf: in out T_Liste_Kit; Nature: T_Nature) return T_Liste_Kit is 
+Function kit_disponible(K, neuf: in T_Liste_Kit; Nature: T_Nature) return T_Liste_Kit is 
 	Begin
 		if K=NULL and neuf=NULL then
 			return NULL;

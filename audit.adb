@@ -1,5 +1,5 @@
-with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entreprise;
-use  Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entreprise;
+with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entreprise, archivage;
+use  Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entreprise, archivage;
 
 package body audit is
 	
@@ -22,9 +22,8 @@ Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Da
 	bool: boolean;
 	Begin
 		put_line("Saisie nouvel audit:");
-		put("Saisir l'id de l'audit");
+		put("Saisir l'id de l'audit : ");
 		get(DA.Numero); skip_line; new_line;
-		put("Saisir la date voulue pour l'audit");
 		loop
 			Saisie_T_Date(DA.DateAuPlusTot); new_line;
 			bool:=Compare_T_Date(DA.DateAuPlusTot, dateDuJour);
@@ -35,7 +34,7 @@ Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Da
 		end loop;
 		put("Saisir la durée de l'audit");
 		get(DA.Duree); skip_line; new_line;
-		put("1 => Urgence, 2 => Routine");
+		put("1 => Urgence, 2 => Routine: ");
 		loop
 			get(option); skip_line;
 			case option is
@@ -44,9 +43,8 @@ Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Da
 				when others => put("Votre saisie est erronée, ressaisissez..");
 			end case;
 		end loop;
-		put("Saisir l entreprise concernée par l audit");
+		put("Saisir l entreprise concernée par l audit: ");
 		Saisie_T_Mot(DA.Entreprise);
-		put("Saisir la nature de l'audit");
 		Saisie_Nature(DA.Nature);
 		DA.Profession:=Saisie_Profession;
 end Saisie_Demande_Audit;
@@ -78,16 +76,6 @@ Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; d
 				ReachPos(Urgence, Urgence.tete,Da);
 			end if;				
 	end Insertion_Urgence;
-	Procedure Insertion_Routine (Routine: in out T_TF_File_Demande; DA: in T_Demande_Audit) is 
-	Begin
-		if Routine.tete=NULL then
-			Routine.tete := new T_UneFile_Demande'(DA,NULL);
-			Routine.fin := Routine.tete;
-		else
-			Routine.fin.suiv := new T_UneFile_Demande'(DA,NULL);
-			Routine.fin := Routine.fin.suiv;
-		end if;
-	end Insertion_Routine;
 	Begin
 		Saisie_Demande_Audit(DA, dateDuJour);
 		if Da.Urgence then
@@ -96,6 +84,21 @@ Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; d
 			Insertion_Routine(Routine, DA);
 		end if;
 end Insertion_Liste_Demande;
+
+
+
+Procedure Insertion_Routine (Routine: in out T_TF_File_Demande; DA: in T_Demande_Audit) is 
+Begin
+	if Routine.tete=NULL then
+		Routine.tete := new T_UneFile_Demande'(DA,NULL);
+		Routine.fin := Routine.tete;
+	else
+		Routine.fin.suiv := new T_UneFile_Demande'(DA,NULL);
+		Routine.fin := Routine.fin.suiv;
+	end if;
+end Insertion_Routine;
+
+
 
 Procedure Supprime_Urgence_demande_audit (Urgence: in out T_TF_File_Demande; Numero: in integer) is
 	Procedure Supprime_Urgence(Urgence: in out T_TF_File_Demande; actuel, precedent: in out T_File_Demande; Numero: in integer) is
@@ -180,15 +183,20 @@ Procedure Insertion_liste_audit_en_cours (Urgence, Routine: in out T_TF_File_Dem
 					Lemploye:=employe_disponible(LEtete.tete, Lemploye, AD.Demande_Audit.Profession, dateDuJour);
 					Lekit:=kit_disponible(LKtete.tete, Lekit, AD.Demande_Audit.Nature);
 					
-					if Lemploye/=NULL then
-					--if Lemploye/=NULL and Lekit=/NULL then	
+					if Lemploye/=NULL and Lekit/=NULL then	
 						AeC.NumeroA:= AD.Demande_Audit.Numero;
 						AeC.Date_debut:= dateDuJour;
 						AeC.Duree:= AD.Demande_Audit.Duree;
-						--AeC.Date_fin:= retourne_date(dateDuJour, AeC.Duree);
+						AeC.DureeS:= AD.Demande_Audit.Duree;
+						AeC.Date_fin:= retourne_date(dateDuJour, AeC.Duree);
 						AeC.Kit:= Lekit;
 						Aec.Employe:= Lemploye;
 						Aec.Entreprise:= retournePtENtreprise(LEntete.tete, AD.Demande_Audit.Entreprise);
+						Aec.Reporte:=AD.Demande_Audit.Reporte;
+						
+						Aec.Kit.Kit.Nb_utilisation:=Lekit.Kit.Nb_utilisation+1;
+						Aec.Kit.Kit.Utilise:=true;
+						Aec.Employe.Employe.Disponible:=false;
 						
 						Ajout_en_cours(AeC, EnCours);
 						
@@ -253,7 +261,100 @@ Procedure Affiche_audit_en_cours (L: in out T_Liste_Audit) is
 		end if;	
 end Affiche_audit_en_cours;
 
+
+
+Procedure Supprime_en_cours(EnCours: in out T_TF_Liste_Audit; NumeroA: in integer) is
+	Procedure Delete_en_cours(A_EnCours: in out T_Liste_Audit; NumeroA: in integer)is 
+		Begin
+			if A_EnCours/=NULL then
+				if A_EnCours.Audit.NumeroA=NumeroA then
+					A_EnCours:=A_Encours.suiv;
+				else
+					Delete_en_cours(A_EnCours.suiv, NumeroA);
+				end if;
+			end if;			
+	end Delete_en_cours;
+	Begin
+		if EnCours.tete.Audit.NumeroA=NumeroA then
+			EnCours.tete:=EnCours.tete.suiv;
+		else
+			Delete_en_cours(EnCours.tete, NumeroA);
+		end if;
+end Supprime_en_cours;
+			
+
+
+Procedure Actualisation(EnCours: in out T_TF_Liste_Audit; Routine: in out T_TF_File_Demande; A_EnCours: in out T_Liste_Audit; dateDuJour: in T_Date) is
+	DA: T_Demande_Audit;
+	option: integer;
+	Begin
+		if A_EnCours/=NULL then
+			if A_EnCours.Audit.Duree/=1 then
+				A_EnCours.Audit.Duree:=A_EnCours.Audit.Duree-1;
+				A_EnCours.Audit.Employe.Employe.Nb_jours_audit:=A_EnCours.Audit.Employe.Employe.Nb_jours_audit+1;
+			else
+				A_EnCours.Audit.Employe.Employe.Nb_jours_audit:=A_EnCours.Audit.Employe.Employe.Nb_jours_audit+1;
+				A_EnCours.Audit.Employe.Employe.Disponible:=true;
+				A_EnCours.Audit.Kit.Kit.Utilise:=false;
+				A_EnCours.Audit.Entreprise.Entreprise.Date_dernier_audit:=dateDuJour;
+
+				if A_EnCours.Audit.Reporte=false then
+					put("Resultat de l'audit de l'entreprise : ");
+					put(A_EnCours.Audit.Entreprise.Entreprise.Nom); new_line;
+					put_line("Tapez 1 pour positif");
+					put_line("Tapez 2 pour negatif");
+					put_line("Tapez 3 pour problematique");
+					loop
+						get(option); skip_line;
+						case option is						
+							when 1 => A_EnCours.Audit.Resultat:=positif; exit;
+							when 2 => A_EnCours.Audit.Resultat:=negatif; exit;
+							when 3 => A_EnCours.Audit.Resultat:=problematique;
+							
+							DA.Numero:=A_EnCours.Audit.NumeroA;
+							--DA.DateAuPlusTot:=retourne_date(dateDuJour, 30);
+							DA.Duree:=A_EnCours.Audit.DureeS;
+							DA.Urgence:=false;
+							DA.Entreprise:=A_EnCours.Audit.Entreprise.Entreprise.Nom;
+							DA.Nature:=A_EnCours.Audit.Kit.Kit.Nature;
+							DA.Profession:=A_EnCours.Audit.Employe.Employe.Profession;
+							DA.Reporte:=true;
+				
+							Insertion_Routine (Routine, DA); exit;
+							when others => put("Erreur saisie, ressaisissez..");
+						end case;
+					end loop;
+				else
+					put("Resultat de l'audit de l'entreprise : ");
+					put(A_EnCours.Audit.Entreprise.Entreprise.Nom); new_line;
+					put_line("Tapez 1 pour positif");
+					put_line("Tapez 2 pour negatif");
+					put_line("L'option problematique indisponible");
+					loop
+						get(option); skip_line;
+						case option is
+							when 1 => A_EnCours.Audit.Resultat:=positif; exit;
+							when 2 => A_EnCours.Audit.Resultat:=negatif; exit;
+							when others => put("Erreur saisie, ressaisissez..");
+						end case;
+					end loop;
+				end if;
+
+	--			Archive_en_cours();
+				Supprime_en_cours(EnCours, A_EnCours.Audit.NumeroA);
+			end if;
+			Actualisation(EnCours, Routine, A_EnCours.suiv, dateDuJour);
+		end if;
+end Actualisation;
+
 end audit;
+
+
+
+
+
+
+
 
 
 

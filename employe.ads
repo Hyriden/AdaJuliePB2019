@@ -42,9 +42,9 @@ Function Compare_T_Date(date1, date2: T_Date) return boolean;
 Function Saisie_Profession return boolean;
 Procedure Saisie_Employe (E: in out T_Employe);
 Procedure Recrutement (tete : in out T_Liste_Employe);
-Procedure Depart (l: in out T_Liste_Employe);
+Procedure Depart (T_T_Employe: in out T_tete_Liste_Employe);
 Procedure Affiche_Employe (L: in out T_Liste_Employe);
-Procedure Depart_Conges (E: out T_Employe; L: in out T_Liste_Employe; dateRetour: out T_Date; dateDuJour : T_Date);
+Procedure Depart_Conges (L: in out T_Liste_Employe; dateDuJour : T_Date);
 Function employe_disponible(E, noob: in out T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe;
 
 

@@ -16,10 +16,12 @@ Begin
 	end if;
 end Compare_IdKit;
 
+-------------------------------------------------------------------------------------------- 
+
 Procedure Saisie_Nature (nat: out T_Nature) is
 	option: integer;
 	Begin
-		put_line("Veuillez saisir la nature du kit");
+		put_line("Veuillez saisir la nature: ");
 		put_line("Tapez 1 pour Veterinaire");
 		put_line("Tapez 2 pour Phyto-sanitaire");
 		put_line("Tapez 3 pour Microbiologie");
@@ -36,15 +38,19 @@ Procedure Saisie_Nature (nat: out T_Nature) is
 		end loop;
 end Saisie_Nature;
 
+-------------------------------------------------------------------------------------------- 
 
 Procedure Saisie_Kit (K : in out T_Kit; tete : in out T_Liste_Kit; dateDuJour: in T_Date) is
 	bool : boolean;
+	
 	Begin
 		Saisie_Nature(K.Nature);
 		put_line("Veuillez saisir l'identifiant du kit");
 		loop
 			get(K.Identifiant); skip_line;
-	   	 	bool:=Compare_IdKit(tete, K.Identifiant);
+			
+	   	 	--bool:=Compare_IdKit(tete, K.Identifiant);
+			bool:=true;
 	   	 	exit when bool;
 	   	 	put("Identifiant déja utlisé, ressaisissez..");
 		end loop;  
@@ -68,29 +74,39 @@ end Ajout_Kit;
    
 -------------------------------------------------------------------------------------------- 
  
-Procedure Suppr_Kit (L: in out T_Liste_Kit) is
+Procedure Suppr_Kit (T_t_Kit: in out T_tete_Liste_Kit) is
 	Identifiant: integer;
 	bool: boolean;
 	Begin
 		loop
 			put_line("Veuillez saisir l'identifiant du kit à supprimer");
 			get(Identifiant); new_line;
-			bool:=Compare_IdKit(L,Identifiant);
+			bool:=Compare_IdKit(T_t_Kit.tete, Identifiant);
 			exit when bool=false;
 			put("Kit innexistant, ressaisissez..");
 		end loop;
-		Delete_Kit(L, Identifiant);
+		Delete_Kit(T_t_Kit, Identifiant);
 end Suppr_Kit;
    
 -------------------------------------------------------------------------------------------- 
 
-Procedure Delete_Kit (L: in out T_Liste_Kit; Identifiant: in integer) is
-	Begin
-		if L/=NULL then
-			if L.Kit.Identifiant=Identifiant then
-				L:=L.suiv;
+Procedure Delete_Kit(T_t_Kit: in out T_tete_Liste_Kit; Identifiant: in integer) is
+	Procedure Del_Kit(L : in out T_Liste_Kit; Identifiant: in integer) is
+		Begin
+			if L/=NULL then
+				if L.Kit.Identifiant=Identifiant then
+					L:=L.suiv;
+				end if;
+				Del_Kit(L.suiv, Identifiant);
 			end if;
-			Delete_Kit(L.suiv, Identifiant);
+	end Del_Kit;	
+	Begin
+		if T_t_Kit.tete/=NULL then
+			if T_t_Kit.tete.Kit.Identifiant=Identifiant then
+				T_t_Kit.tete:=T_t_Kit.tete.suiv;
+			end if;
+		else
+			Del_Kit(T_t_Kit.tete, Identifiant);
 		end if;
 end Delete_Kit;
 		
@@ -111,9 +127,9 @@ Procedure Affiche_Kit (L : in out T_Liste_Kit) is
 			put("Date de peremption :");
 			put(L.Kit.Date_peremption.jour); put("/");
 			put(L.Kit.Date_peremption.mois); put("/");
-			put(L.Kit.Date_peremption.annee); new_line;      
+			put(L.Kit.Date_peremption.annee); new_line;   
+			Affiche_Kit(L.suiv);  
 		end if;
-		Affiche_Kit(L.suiv);
 End Affiche_Kit;
 
 -------------------------------------------------------------------------------------------- 			
@@ -137,28 +153,31 @@ Function kit_disponible(K, neuf: in out T_Liste_Kit; Nature: T_Nature) return T_
 			return kit_disponible(K.suiv, neuf, Nature);
 		end if;
 end kit_disponible;
-	
-Procedure KitPerime(dateDuJour: in T_Date; K: in out T_Liste_Kit) is
-	bool:boolean;
-	Begin
-		if K=/NULL then
-			bool:=Compare_T_Date(K.Kit.Date_peremption, dateDuJour);
-			if bool=false then 
-				Delete_Kit(K, K.Kit.Identifiant);
+
+-------------------------------------------------------------------------------------------- 
+
+Procedure KitPerime(T_t_Kit: in out T_tete_Liste_Kit; dateDuJour: in T_Date) is
+	Procedure Kitdepasse(T_t_Kit: in out T_tete_Liste_Kit; K: in out T_Liste_Kit; dateDuJour: in T_Date) is
+		bool:boolean;
+		Begin
+			if K/=NULL then
+				if K.Kit.Utilise=false then
+					bool:=Compare_T_Date(K.Kit.Date_peremption, dateDuJour);
+					if bool=false then
+	--					archive_kit();
+						Delete_Kit(T_t_Kit, K.Kit.Identifiant);
+					end if;
+				end if;
+				Kitdepasse(T_t_Kit, K.suiv, dateDuJour);
 			end if;
-			KitPerime(dateDuJour, K.suiv);
-		end if;
+	end Kitdepasse;
+	Begin
+		Kitdepasse(T_t_Kit, T_t_Kit.tete, dateDuJour);
 end KitPerime;
 
 
 
-
-
-
-
-
-
-End Kit;
+end kit;
 
 
 

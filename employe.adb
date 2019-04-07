@@ -8,7 +8,7 @@ k:integer;
 Begin
 	loop
 		Begin
-	   		get_line(mot,k);
+	   		get_line(mot,k); skip_line;
 			exit;
 			exception
 			when constraint_error => put_line("Erreur de saisie du mot, ressaisissez..");
@@ -74,7 +74,7 @@ Function Saisie_Profession return boolean is
 		loop
 			get(option); Skip_Line;
 			exit when option=1 or option=2;
-			put("Erreur saisie");
+			put("Erreur saisie, ressaisissez..");
 		end loop;
 		if option=1 then
 			return true;
@@ -108,7 +108,7 @@ end Recrutement;
 
 ---------------------------------------------------------------------------------------      
 
-Procedure Depart (L: in out T_Liste_Employe) is 
+Procedure Depart (T_t_Employe: in out T_tete_Liste_Employe) is 
 	E:T_Employe;
 	Procedure Supp_Employe (L: in out T_Liste_Employe; E: in out T_Employe) is 
 		Begin
@@ -122,8 +122,14 @@ Procedure Depart (L: in out T_Liste_Employe) is
 			end if;
 	end Supp_Employe;
 	Begin
-		Saisie_Employe(E);	
-		Supp_Employe(L, E);
+		Saisie_Employe(E);
+		if T_t_Employe.tete /= NULL then
+			if T_t_Employe.tete.Employe.NomE=E.NomE and T_t_Employe.tete.Employe.PrenomE=E.PrenomE then
+				T_t_Employe.tete:=T_t_Employe.tete.suiv;
+			end if;
+		else
+			Supp_Employe(T_t_Employe.tete, E);
+		end if;
 end Depart;
 
 ---------------------------------------------------------------------------------------  
@@ -134,7 +140,6 @@ Procedure Affiche_Employe (L: in out T_Liste_Employe) is
 			put("Nom : "); put(L.Employe.NomE); new_line; 
 			put("Prénom : "); put(L.Employe.PrenomE); new_line;
 			put("Profession : ");new_line; 
-			put("Profession : ");
 			if L.Employe.Profession then
 				put_line("Technicien");
 			else
@@ -165,8 +170,10 @@ End Affiche_Employe;
 
 ---------------------------------------------------------------------------------------  
        
-Procedure Depart_Conges (E: out T_Employe; L: in out T_Liste_Employe; dateRetour: out T_Date; dateDuJour : T_Date) is
+Procedure Depart_Conges (L: in out T_Liste_Employe; dateDuJour : T_Date) is
 	bool:boolean;
+	E: T_Employe;
+	dateRetour: T_Date;
 	Begin
 	    put("Saisir l'employé qui part en congé");
 		Saisie_Employe(E);

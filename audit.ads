@@ -11,7 +11,8 @@ Package audit is
 		Urgence : boolean ; 
 		Entreprise : T_Mot ;
 		Nature : T_Nature ;
-		Profession : boolean; 
+		Profession : boolean;
+		Reporte : boolean := false ;
 	end record ;
 	
 	Type T_UneFile_Demande ;
@@ -25,14 +26,18 @@ Package audit is
 		tete,fin:T_File_Demande;
 	end record;
 	
+	Type T_Resultat is (positif, negatif, problematique);	
+	
 	Type T_Audit_en_cours is record 
 		NumeroA : integer ;
 		Date_debut : T_Date ;
 		Date_fin : T_Date ;
-		Duree : T_Duree ;
+		Duree, DureeS : T_Duree ;
 		Kit : T_Liste_Kit ;
 		Employe : T_Liste_Employe ; 
 		Entreprise : T_Liste_Entreprise ;
+		Resultat : T_Resultat;
+		Reporte : boolean ;		
 	end record ;
 	
 	Type T_UnAudit;
@@ -52,12 +57,15 @@ Package audit is
 	Function Compare_NumeroAudit(F:T_File_Demande; Numero: Integer) return boolean;
 	Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Date);
 	Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; dateDuJour : in T_Date);
+	Procedure Insertion_Routine (Routine: in out T_TF_File_Demande; DA: in T_Demande_Audit);
 	Procedure Supprime_Urgence_demande_audit (Urgence: in out T_TF_File_Demande; Numero: in integer);
 	Procedure Supprime_Routine_demande_audit (Routine: in out T_TF_File_Demande; Numero: in integer);	
 	Procedure Affiche_liste_audit (File: in out T_File_Demande);
 	Procedure Insertion_liste_audit_en_cours (Urgence, Routine: in out T_TF_File_Demande; dateDuJour: in T_Date; EnCours: in out T_TF_Liste_Audit; LEtete: in out T_tete_Liste_Employe; LKtete: in out T_tete_Liste_Kit; LEntete: in out T_tete_Liste_Entreprise);
 	Procedure Ajout_en_cours(AeC: in T_Audit_en_cours; EnCours: in out T_TF_Liste_Audit);
 	Procedure Affiche_audit_en_cours (L: in out T_Liste_Audit);
+	Procedure Actualisation(EnCours: in out T_TF_Liste_Audit; Routine: in out T_TF_File_Demande; A_EnCours: in out T_Liste_Audit; dateDuJour: in T_Date);
+	
 	
 	
 end audit;

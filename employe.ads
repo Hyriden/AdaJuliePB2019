@@ -45,7 +45,7 @@ Procedure Recrutement (tete : in out T_Liste_Employe);
 Procedure Depart (T_T_Employe: in out T_tete_Liste_Employe);
 Procedure Affiche_Employe (L: in out T_Liste_Employe);
 Procedure Depart_Conges (L: in out T_Liste_Employe; dateDuJour : T_Date);
-Function employe_disponible(E, noob: in out T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe;
+Function employe_disponible(E, noob: in T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe;
 
 
 end employe;

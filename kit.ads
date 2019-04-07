@@ -35,7 +35,7 @@ package kit is
 	Procedure Suppr_Kit (T_t_Kit: in out T_tete_Liste_Kit);
 	Procedure Delete_Kit(T_t_Kit: in out T_tete_Liste_Kit; Identifiant: in integer);
 	Procedure Affiche_Kit (L : in out T_Liste_Kit);
-	Function kit_disponible(K, neuf: in out T_Liste_Kit; Nature: T_Nature) return T_Liste_Kit;
+	Function kit_disponible(K, neuf: in T_Liste_Kit; Nature: T_Nature) return T_Liste_Kit;
 	Procedure KitPerime(T_t_Kit: in out T_tete_Liste_Kit; dateDuJour: in T_Date);
 	
 	

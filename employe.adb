@@ -194,7 +194,7 @@ end Depart_Conges;
 
 ---------------------------------------------------------------------------------------  
 
-Function employe_disponible(E, noob: in out T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe is 
+Function employe_disponible(E, noob: in T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe is 
 	bool: boolean;
 	Begin
 		if E=NULL and noob=NULL then

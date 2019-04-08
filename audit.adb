@@ -28,11 +28,11 @@ Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Da
 			Saisie_T_Date(DA.DateAuPlusTot); new_line;
 			bool:=Compare_T_Date(DA.DateAuPlusTot, dateDuJour);
 			exit when bool;
-			put("Date saisie remplacée par date du jour");
+			put("Date saisie remplacee par date du jour");
 			DA.DateAuPlusTot:=dateDuJour;
 			exit;
 		end loop;
-		put("Saisir la durée de l'audit");
+		put("Saisir la duree de l'audit");
 		get(DA.Duree); skip_line; new_line;
 		put("1 => Urgence, 2 => Routine: ");
 		loop
@@ -40,10 +40,10 @@ Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Da
 			case option is
 				when 1 => DA.Urgence:=true; exit;
 				when 2 => DA.Urgence:=false; exit;
-				when others => put("Votre saisie est erronée, ressaisissez..");
+				when others => put("Votre saisie est erronee, ressaisissez..");
 			end case;
 		end loop;
-		put("Saisir l entreprise concernée par l audit: ");
+		put("Saisir l entreprise concernee par l audit: ");
 		Saisie_T_Mot(DA.Entreprise);
 		Saisie_Nature(DA.Nature);
 		DA.Profession:=Saisie_Profession;
@@ -149,7 +149,7 @@ Procedure Affiche_liste_audit (File: in out T_File_Demande) is
 			put(File.Demande_Audit.DateAuPlusTot.jour); put("/");
 			put(File.Demande_Audit.DateAuPlusTot.mois); put("/");
 			put(File.Demande_Audit.DateAuPlusTot.annee); new_line;  
-			put("Duree nécessaire:"); put(File.Demande_Audit.Duree); new_line;
+			put("Duree necessaire:"); put(File.Demande_Audit.Duree); new_line;
 			if File.Demande_Audit.Urgence then
 				put("Urgence"); new_line;
 			else
@@ -159,7 +159,7 @@ Procedure Affiche_liste_audit (File: in out T_File_Demande) is
 			put(File.Demande_Audit.Entreprise); new_line;
 			put("Nature : "); put(T_Nature'image(File.Demande_Audit.Nature)); new_line;
 			Affiche_liste_audit(File.suiv); new_line;
-			put("Professionnel qualifié: ");
+			put("Professionnel qualifie: ");
 			if File.Demande_Audit.Profession then
 				put("Technicien");
 			else
@@ -252,9 +252,9 @@ Procedure Affiche_audit_en_cours (L: in out T_Liste_Audit) is
 			put(L.Audit.Date_fin.jour); put("/");
 			put(L.Audit.Date_fin.mois); put("/");
 			put(L.Audit.Date_fin.annee); new_line;  
-			put("Duree nécessaire : "); put(L.Audit.Duree); new_line;
+			put("Duree necessaire : "); put(L.Audit.Duree); new_line;
 			put("Numero du Kit : "); put(L.Audit.Kit.Kit.Identifiant); new_line;
-			put("Employé : "); put(L.Audit.Employe.Employe.NomE);put(L.Audit.Employe.Employe.PrenomE); new_line;
+			put("Employe : "); put(L.Audit.Employe.Employe.NomE);put(L.Audit.Employe.Employe.PrenomE); new_line;
 			put("Entreprise : "); put(L.Audit.Entreprise.Entreprise.Nom); new_line;	
 			
 			Affiche_audit_en_cours (L.suiv);
@@ -312,7 +312,7 @@ Procedure Actualisation(EnCours: in out T_TF_Liste_Audit; Routine: in out T_TF_F
 							when 3 => A_EnCours.Audit.Resultat:=problematique;
 							
 							DA.Numero:=A_EnCours.Audit.NumeroA;
-							--DA.DateAuPlusTot:=retourne_date(dateDuJour, 30);
+							DA.DateAuPlusTot:=retourne_date(dateDuJour, 30);
 							DA.Duree:=A_EnCours.Audit.DureeS;
 							DA.Urgence:=false;
 							DA.Entreprise:=A_EnCours.Audit.Entreprise.Entreprise.Nom;
@@ -340,7 +340,7 @@ Procedure Actualisation(EnCours: in out T_TF_Liste_Audit; Routine: in out T_TF_F
 					end loop;
 				end if;
 
-	--			Archive_en_cours();
+--				Archivage_Audit_en_cours(A_EnCours.Audit);
 				Supprime_en_cours(EnCours, A_EnCours.Audit.NumeroA);
 			end if;
 			Actualisation(EnCours, Routine, A_EnCours.suiv, dateDuJour);

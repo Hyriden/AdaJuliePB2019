@@ -8,7 +8,7 @@ k:integer;
 Begin
 	loop
 		Begin
-	   		get_line(mot,k); skip_line;
+	   		get_line(mot,k);
 			exit;
 			exception
 			when constraint_error => put_line("Erreur de saisie du mot, ressaisissez..");
@@ -25,7 +25,7 @@ Procedure Saisie_T_Date(date: out T_Date) is
 			get(date.jour);skip_line;
 			put_line("Saisie mois :");
 			get(date.mois);skip_line;
-			put_line("Saisie année :");
+			put_line("Saisie annee :");
 			get(date.annee);skip_line;
 			case date.mois is
 				when 2 =>
@@ -70,7 +70,7 @@ end Compare_T_Date;
 Function Saisie_Profession return boolean is
 	option: integer;
 	Begin
-		Put_line("1 => Technicien , 2 => Ingénieur");   
+		Put_line("1 => Technicien , 2 => Ingenieur");   
 		loop
 			get(option); Skip_Line;
 			exit when option=1 or option=2;
@@ -87,10 +87,10 @@ end Saisie_profession;
 	
 Procedure Saisie_Employe (E: in out T_Employe) is
 	Begin	
-	Put_line("Veuillez saisir le nom de l'employé");
+	Put_line("Veuillez saisir le nom de l'employe");
 	Saisie_T_Mot(E.NomE);
 	
-	Put_line("Veuillez saisir le prénom de l'employé");
+	Put_line("Veuillez saisir le prenom de l'employe");
 	Saisie_T_Mot(E.PrenomE);
 	
 	E.Profession:=Saisie_Profession; 
@@ -113,7 +113,7 @@ Procedure Depart (T_t_Employe: in out T_tete_Liste_Employe) is
 	Procedure Supp_Employe (L: in out T_Liste_Employe; E: in out T_Employe) is 
 		Begin
 			if L=NULL then
-				put("Employé non trouvé ou indisponible");
+				put("Employe non trouve ou indisponible");
 			else
 				if E.NomE=L.Employe.NomE and E.PrenomE=L.Employe.PrenomE and E.Profession=L.Employe.Profession and L.Employe.Disponible then
 					L:=L.suiv;
@@ -138,14 +138,14 @@ Procedure Affiche_Employe (L: in out T_Liste_Employe) is
 	Begin
 		if L /= null then
 			put("Nom : "); put(L.Employe.NomE); new_line; 
-			put("Prénom : "); put(L.Employe.PrenomE); new_line;
-			put("Profession : ");new_line; 
+			put("Prenom : "); put(L.Employe.PrenomE); new_line;
+			put("Profession : ");
 			if L.Employe.Profession then
 				put_line("Technicien");
 			else
-				put_line("Ingénieur");
+				put_line("Ingenieur");
 			end if;
-			put("Congé : ");
+			put("Conge : ");
 			if L.Employe.Retour.Annee=0 then
 				put("Non");new_line; 
 			else
@@ -163,7 +163,7 @@ Procedure Affiche_Employe (L: in out T_Liste_Employe) is
 			end if;
 			put("Nombre de jours en audit : ");
 			put(L.Employe.Nb_jours_audit);
-			
+			new_line;
 			Affiche_Employe(L.suiv);			
 		end if;
 End Affiche_Employe;
@@ -171,30 +171,37 @@ End Affiche_Employe;
 ---------------------------------------------------------------------------------------  
        
 Procedure Depart_Conges (L: in out T_Liste_Employe; dateDuJour : T_Date) is
+	Procedure esclave (L: in out T_Liste_Employe; E: T_Employe; dateRetour : T_Date) is
+		Begin
+			if L=NULL then
+				put("Employe actuellement en audit, la prise de conges est impossible");
+			else
+				if L.Employe.NomE=E.NomE and L.Employe.prenomE=E.prenomE and L.Employe.Disponible then
+					L.Employe.Retour:=dateRetour;
+				else
+					esclave(L.suiv, E, dateRetour);
+				end if;
+			end if;
+	end esclave;
 	bool:boolean;
 	E: T_Employe;
 	dateRetour: T_Date;
 	Begin
-	    put("Saisir l'employé qui part en congé");
 		Saisie_Employe(E);
-		put("Saisir la date du retour de l'employé");
+		put_line("Saisir la date du retour de l'employe");
 		Saisie_T_Date(dateRetour);
-		if E.Disponible then
-			loop
-				Saisie_T_Date(dateRetour);
-				bool:=Compare_T_Date(dateRetour, dateDuJour);
-				exit when bool;
-				put("La date du retour est inférieure ou égale à la date du jour, ressaisissez..");
-			end loop;
-			E.Retour:=dateRetour;
-		else
-			put("Employé actuellement en audit, la prise de congés est impossible");
-		end if;
+		loop
+			Saisie_T_Date(dateRetour);
+			bool:=Compare_T_Date(dateRetour, dateDuJour);
+			exit when bool;
+			put("La date du retour est inferieure ou egale à la date du jour, ressaisissez..");
+		end loop;
+		esclave(L, E, dateRetour);
 end Depart_Conges;
 
 ---------------------------------------------------------------------------------------  
 
-Function employe_disponible(E, noob: in T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe is 
+Function employe_disponible(E, noob: T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe is 
 	bool: boolean;
 	Begin
 		if E=NULL and noob=NULL then
@@ -210,7 +217,7 @@ Function employe_disponible(E, noob: in T_Liste_Employe; Profession: boolean; da
 			bool:=Compare_T_Date(E.Employe.Retour, dateDuJour);
 			if E.Employe.Profession=Profession and bool=false and E.Employe.Disponible=true then
 				if noob.Employe.Nb_jours_audit>E.Employe.Nb_jours_audit then
-					noob:=E;
+					return employe_disponible(E.suiv, E, Profession, dateDuJour);
 				end if;
 			end if;
 		return employe_disponible(E.suiv, noob, Profession, dateDuJour);

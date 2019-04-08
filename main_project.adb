@@ -18,9 +18,9 @@ dateDuJour: T_Date;
 		Begin
 			loop
 				new_line;
-				put_line("    ╔╦╗┌─┐┌┐┌┬ ┬");
-				put_line("    ║║║├┤ ││││ │");
-				put_line("    ╩ ╩└─┘┘└┘└─┘");
+		--		put_line("    ╔╦╗┌─┐┌┐┌┬ ┬");
+		--		put_line("    ║║║├┤ ││││ │");
+		--		put_line("    ╩ ╩└─┘┘└┘└─┘");
 				new_line;
 				new_line;
 				
@@ -46,6 +46,11 @@ dateDuJour: T_Date;
 			loop
 				Menu(Choix);
 				case Choix is
+					when '0' => Saisie_T_Date(dateDuJour);
+						put("Nous somme le:"); 
+						put(dateDuJour.jour);put("/"); 
+						put(dateDuJour.mois);put("/"); 
+						put(dateDuJour.annee); new_line;					
 					when '1' => Put_Line("Bienvenue dans la partie gestion des employes");
 				    	loop
 				    		Put_Line("a => Recrutement d'un employe");
@@ -54,7 +59,7 @@ dateDuJour: T_Date;
 				    		Put_Line("d => Depart en congé d'un employes");
 				    		Put_Line("e => Affichage des employes disponibles");
 				    		Put_Line("f => QUITTER..");
-				    		Put_Line(" Choix :");
+				    		Put(" Choix :"); new_line;
 				    		Get(Choix);
 				    		Skip_Line;
 				    		exit when Choix='a' or Choix='b' or Choix='c' or Choix='d' or Choix='e' or Choix='f';
@@ -77,7 +82,7 @@ dateDuJour: T_Date;
 				               Put_Line("c => Affichage de tous les kits");
 				               Put_Line("d => Affichage des kits disponibles");
 				               Put_Line("e => QUITTER..");
-				               Put_Line(" Choix :");
+				               Put(" Choix :"); new_line;
 				               Get(Choix);
 				               Skip_Line;
 				               exit when Choix='a' or Choix='b' or Choix='c' or Choix='d' or Choix='e';
@@ -97,7 +102,7 @@ dateDuJour: T_Date;
 				               Put_Line("a => Ajouter une entreprise");
 				               Put_Line("b => Supression une entreprise");
 				               Put_Line("c => QUITTER..");
-				               Put_Line(" Choix :");
+				               Put(" Choix :"); new_line;
 				               Get(Choix);
 				               Skip_Line;
 				               exit when Choix='a' or Choix='b' or Choix='c';
@@ -118,7 +123,7 @@ dateDuJour: T_Date;
 				               Put_Line("c => Afficher la liste des demandes de Routines");
 				               Put_Line("d => Afficher les audits en cours");                                    
 				               Put_Line("e => QUITTER..");
-				               Put_Line("Choix"); 
+				               Put("Choix"); new_line;
 				               Get(Choix);
 				               Skip_Line;
 				               exit when Choix='a' or Choix='b' or Choix='c' or Choix='d';
@@ -136,10 +141,12 @@ dateDuJour: T_Date;
 				         when '5' => Put_Line("Bienvenue dans la partie gestion des archives");
 				            loop
 				               Put_Line("a => Telecharger les archives");
-				               Put_line("b => QUITTER..");
+				               Put_Line("b => Afficher audit terminés");
+				               Put_line("c => QUITTER..");
+				               Put("Choix"); new_line;
 				               Get(Choix);
 				               Skip_Line;
-				               exit when Choix='a' or Choix='b';
+				               exit when Choix='a' or Choix='b' or Choix='c';
 				               Put_Line("Erreur saisie");
 				            end loop;
 				            case Choix is 
@@ -152,6 +159,7 @@ dateDuJour: T_Date;
 			            		Put_Line("a => 1 jour");
 			            		Put_Line("b => x jours");
 			               	  	Put_line("c => QUITTER..");
+								Put("Choix"); new_line;
 			               		Get(Choix);
 			               	 	Skip_Line;
 			               	 	exit when Choix='a' or Choix='b' or Choix='c';

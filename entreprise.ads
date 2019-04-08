@@ -7,7 +7,7 @@ package entreprise is
 Type T_Resultat is (positif, negatif, problematique) ;
 
 Type T_Entreprise is record
-    Nom : T_Mot ;
+    Nom : T_Mot :=(others =>' ');
     Date_dernier_audit : T_Date ;
     Resulat_dernier_audit : T_Resultat ;
 end record ;

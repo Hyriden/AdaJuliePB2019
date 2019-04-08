@@ -29,11 +29,11 @@ Procedure Saisie_Nature (nat: out T_Nature) is
 		loop
 			get(option); skip_line;
 			case option is
-				when 1 => nat:=Veterinaire;
-				when 2 => nat:=Phyto_sanitaire;
-				when 3 => nat:=Microbiologie;
-				when 4 => nat:=Analyse_Composition;
-	    		when others => put ("Votre saisie est erronée, ressaisissez..");
+				when 1 => nat:=Veterinaire; exit;
+				when 2 => nat:=Phyto_sanitaire; exit;
+				when 3 => nat:=Microbiologie; exit;
+				when 4 => nat:=Analyse_Composition; exit;
+	    		when others => put ("Votre saisie est erronee, ressaisissez..");
 			end case;
 		end loop;
 end Saisie_Nature;
@@ -52,14 +52,14 @@ Procedure Saisie_Kit (K : in out T_Kit; tete : in out T_Liste_Kit; dateDuJour: i
 	   	 	--bool:=Compare_IdKit(tete, K.Identifiant);
 			bool:=true;
 	   	 	exit when bool;
-	   	 	put("Identifiant déja utlisé, ressaisissez..");
+	   	 	put("Identifiant deja utlise, ressaisissez..");
 		end loop;  
-		put_line("Veuillez saisir la date de péremption du kit");
+		put_line("Veuillez saisir la date de peremption du kit");
 		loop
 			Saisie_T_Date(K.date_Peremption);
 			bool:=Compare_T_Date(K.date_Peremption, dateDuJour);
 			exit when bool;
-			put("La date de peremption du kit est inférieure ou égale à la date du jour, ressaisissez..");
+			put("La date de peremption du kit est inferieure ou egale à la date du jour, ressaisissez..");
 		end loop;
 end Saisie_Kit;
 
@@ -117,7 +117,7 @@ Procedure Affiche_Kit (L : in out T_Liste_Kit) is
 		if L/=NULL then
 			put("Nature du kit"); put(T_Nature'image(L.Kit.Nature)); new_line;
 			put("Identifiant du kit:"); Put(L.Kit.Identifiant); new_line;
-			put("Actuellement utilisé:");
+			put("Actuellement utilise:");
 			if L.Kit.Utilise then
 				put("Oui");
 			else
@@ -134,7 +134,7 @@ End Affiche_Kit;
 
 -------------------------------------------------------------------------------------------- 			
 
-Function kit_disponible(K, neuf: in T_Liste_Kit; Nature: T_Nature) return T_Liste_Kit is 
+Function kit_disponible(K, neuf: T_Liste_Kit; Nature: T_Nature) return T_Liste_Kit is 
 	Begin
 		if K=NULL and neuf=NULL then
 			return NULL;
@@ -147,7 +147,7 @@ Function kit_disponible(K, neuf: in T_Liste_Kit; Nature: T_Nature) return T_List
 		else
 			if K.Kit.Utilise=false and K.Kit.Nature=Nature then
 				if neuf.Kit.Nb_utilisation>K.Kit.Nb_utilisation then
-					neuf:=K;
+					return kit_disponible(K.suiv, K, Nature);
 				end if;
 			end if;
 			return kit_disponible(K.suiv, neuf, Nature);

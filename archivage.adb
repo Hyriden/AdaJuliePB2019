@@ -1,4 +1,4 @@
-with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entreprise, audit;
+with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entreprise, audit, ada.Sequential_io;
 use  Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entreprise, audit;
 
 package body archivage is
@@ -6,6 +6,11 @@ package body archivage is
 	Procedure Passage_au_lendemain(EnCours: in out T_TF_Liste_Audit; Urgence, Routine: in out T_TF_File_Demande; LEtete: in out T_tete_Liste_Employe; LKtete: in out T_tete_Liste_Kit; LEntete: in out T_tete_Liste_Entreprise; dateDuJour: in out T_Date) is 
 		Begin	
 			dateDuJour:=retourne_date(dateDuJour, 1);
+			put("Date : "); 
+			put(dateDuJour.jour);put("/"); 
+			put(dateDuJour.mois);put("/"); 
+			put(dateDuJour.annee); new_line;
+			
 			KitPerime(LKtete, dateDuJour);
 			Insertion_liste_audit_en_cours(Urgence, Routine, dateDuJour, EnCours, LEtete, LKtete, LEntete);
 			Actualisation(EnCours, Routine, EnCours.tete, dateDuJour);			
@@ -82,6 +87,8 @@ package body archivage is
 					end if;
 			end case;
 	end retourne_date;
+	
+	
 			
 end archivage;
 

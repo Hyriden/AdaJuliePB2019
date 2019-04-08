@@ -28,13 +28,11 @@ end Saisie_Entreprise;
    
 -------------------------------------------------------------------------------------------- 
 
-Procedure Ajout_Entreprise (Tete : in out T_Liste_Entreprise) is
+Procedure Ajout_Entreprise (LTete : in out T_tete_Liste_Entreprise) is
 	E : T_Entreprise;
-	uneEntreprise:T_Liste_Entreprise;
 	Begin
 		Saisie_Entreprise(E);
-		uneEntreprise:=new T_UneEntreprise'(E,tete);
-		tete:=uneEntreprise;
+		LTete.tete:=new T_UneEntreprise'(E,LTete.tete);
 End Ajout_Entreprise;
    
 -------------------------------------------------------------------------------------------- 

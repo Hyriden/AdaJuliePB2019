@@ -72,23 +72,20 @@ Package audit is
 		tete: T_Liste_Historique;
 	end record;
 	
-	
-	
-	--procedure 
-	
-	Function Compare_NumeroAudit(F:T_File_Demande; Numero: Integer) return boolean;
+	Function Compare_NumeroAudit(F:T_File_Demande; Numero: Integer) return boolean; --return false si demande n'est pas dans la base
 	Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Date; LTete : in out T_tete_Liste_Entreprise);
-	Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; dateDuJour : in T_Date; LTete : in out T_tete_Liste_Entreprise);
+	Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; dateDuJour : in T_Date; LTete : in out T_tete_Liste_Entreprise); -- appele insertion urgence et routine
 	Procedure Insertion_Urgence(Urgence: in out T_TF_File_Demande; DA: in T_Demande_Audit);	
 	Procedure Insertion_Routine (Routine: in out T_TF_File_Demande; DA: in T_Demande_Audit);
 	Procedure Supprime_Urgence_demande_audit (Urgence: in out T_TF_File_Demande; Numero: in integer);
 	Procedure Supprime_Routine_demande_audit (Routine: in out T_TF_File_Demande; Numero: in integer);	
 	Procedure Affiche_liste_audit (File: in out T_File_Demande);
 	Procedure Insertion_liste_audit_en_cours (Urgence, Routine: in out T_TF_File_Demande; dateDuJour: in T_Date; EnCours: in out T_TF_Liste_Audit; LEtete: in out T_tete_Liste_Employe; LKtete: in out T_tete_Liste_Kit; LEntete: in out T_tete_Liste_Entreprise);
-	Procedure Ajout_en_cours(AeC: in T_Audit_en_cours; EnCours: in out T_TF_Liste_Audit);
+	-- verif employe et kit dispo + creation de l'audit en cours et appel ajout_en_cours
+	Procedure Ajout_en_cours(AeC: in T_Audit_en_cours; EnCours: in out T_TF_Liste_Audit); -- ajout à la liste en fonction de la date de fin 
 	Procedure Affiche_audit_en_cours (L: in out T_Liste_Audit);
-	Procedure Actualisation(EnCours: in out T_TF_Liste_Audit; Routine: in out T_TF_File_Demande; A_EnCours: in out T_Liste_Audit; dateDuJour: in T_Date);
-	
+	Procedure Actualisation(EnCours: in out T_TF_Liste_Audit; Routine: in out T_TF_File_Demande; A_EnCours: in out T_Liste_Audit; dateDuJour: in T_Date); 
+	-- termine audit en cours, + saisie note + archivage audit fini
 	
 	
 end audit;

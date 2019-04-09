@@ -87,22 +87,6 @@ end Suppr_Entreprise;
 
 --------------------------------------------------------------------------------------------
 
-Function retournePtENtreprise(L: T_Liste_Entreprise; Entreprise: T_Mot) return T_Liste_Entreprise is
-	Begin
-		if L=NULL then
-			put("ERREUR ENTREPRISE INEXISTANTE");
-			return NULL;
-		else
-			if L.Entreprise.Nom=Entreprise then
-				return L;
-			else
-				return retournePtENtreprise(L.suiv, Entreprise);
-			end if;		
-		end if;
-end retournePtENtreprise;
-
---------------------------------------------------------------------------------------------
-
 Procedure Affiche_Entreprise (E : in out T_Liste_Entreprise) is
 	Begin
 		if E/=NULL then
@@ -114,10 +98,7 @@ Procedure Affiche_Entreprise (E : in out T_Liste_Entreprise) is
 			put("Resultat dernier audit:"); put(T_Resultat'image(E.Entreprise.Resulat_dernier_audit)); new_line;
 			Affiche_Entreprise(E.suiv);  
 		end if;
-End Affiche_Entreprise;
-
-
-
+end Affiche_Entreprise;
 
 end entreprise;
 

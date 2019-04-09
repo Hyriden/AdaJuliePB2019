@@ -17,7 +17,7 @@ package body audit is
 		end if;
 	end Compare_NumeroAudit;
 	
-	-------------------------------------------------------------------------------------------- 
+-------------------------------------------------------------------------------------------- 
 	
 Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Date; LTete : in out T_tete_Liste_Entreprise) is
 	option: integer;
@@ -207,7 +207,7 @@ Procedure Insertion_liste_audit_en_cours (Urgence, Routine: in out T_TF_File_Dem
 						AeC.Date_fin:= retourne_date(dateDuJour, AeC.Duree);
 						AeC.Kit:= Lekit;
 						Aec.Employe:= Lemploye;
-						Aec.Entreprise:= retournePtENtreprise(LEntete.tete, AD.Demande_Audit.Entreprise);
+						Aec.Entreprise:= recherche_pteur_ent(LEntete.tete, AD.Demande_Audit.Entreprise);
 						Aec.Reporte:=AD.Demande_Audit.Reporte;
 						
 						Aec.Kit.Kit.Nb_utilisation:=Lekit.Kit.Nb_utilisation+1;
@@ -317,11 +317,9 @@ Procedure Actualisation(EnCours: in out T_TF_Liste_Audit; Routine: in out T_TF_F
 			historique.Employe_nom:=A_EnCours.Audit.Employe.Employe.NomE;
 			historique.Employe_prenom:=A_EnCours.Audit.Employe.Employe.prenomE;
 			
-			put("Suppression de : "); put(A_EnCours.Audit.NumeroA); new_line;
-			
+			put("Suppression de : "); put(A_EnCours.Audit.NumeroA); new_line;			
 			Supprime_en_cours(EnCours, A_EnCours.Audit.NumeroA);
-						
-				
+			
 --			Archivage_Audit_en_cours(T_Audit_Historique);
 	end Sortie;
 		

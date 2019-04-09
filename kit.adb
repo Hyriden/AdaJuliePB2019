@@ -187,8 +187,6 @@ Procedure KitPerime(T_t_Kit: in out T_tete_Liste_Kit; dateDuJour: in T_Date) is
 		end loop;
 end KitPerime;
 
-
-
 end kit;
 
 

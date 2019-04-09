@@ -17,6 +17,8 @@ package body archivage is
 			Actualisation(EnCours, Routine, EnCours.tete, dateDuJour);			
 	end Passage_au_lendemain;
 	
+-------------------------------------------------------------------------------------------- 
+	
 	Function retourne_date(date: T_date; nbj: integer) return T_Date is
 		d: T_Date;
 		j: integer;
@@ -97,7 +99,7 @@ package body archivage is
 	end retourne_date;
 	
 	
-	--procedure Archivage_Audit_en_cours(Audit: in T_Audit_en_cours) is
+	--procedure Archivage_Audit_en_cours(histo: in T_Audit_Historique) is
 	
 --		use P_Fichier_archive;
 --		File:P_Fichier_archive.file_type;

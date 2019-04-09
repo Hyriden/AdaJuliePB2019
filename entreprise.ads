@@ -24,15 +24,12 @@ Type T_tete_Liste_Entreprise is record
 end record;
 
 -- Fonctions et procédures
-Function Compare_entreprise(L: T_Liste_Entreprise; nom: T_Mot) return boolean;
-function recherche_pteur_ent(L: T_Liste_Entreprise; nom: T_Mot) return T_Liste_Entreprise;
+Function Compare_entreprise(L: T_Liste_Entreprise; nom: T_Mot) return boolean; --return false si entreprise dans la base
+function recherche_pteur_ent(L: T_Liste_Entreprise; nom: T_Mot) return T_Liste_Entreprise; --return pt d'une entreprise
 Procedure Saisie_Entreprise (E : out T_Entreprise);
 Procedure Ajout_Entreprise (LTete : in out T_tete_Liste_Entreprise);
 Procedure Suppr_Entreprise(FT_t_Entreprise: in out T_tete_Liste_Entreprise);
-Function retournePtENtreprise(L: T_Liste_Entreprise; Entreprise: T_Mot) return T_Liste_Entreprise;
 Procedure Affiche_Entreprise (E : in out T_Liste_Entreprise);
-
-
 
 end entreprise;
 

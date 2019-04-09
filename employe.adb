@@ -31,6 +31,21 @@ Begin
 	end if;
 end Compare_nom;
 
+---------------------------------------------------------------------------------------
+
+function recherche_pteur_emp(L: T_Liste_Employe; nomE: T_Mot) return T_Liste_Employe is
+	Begin
+		if L/=NULL then
+			if L.Employe.NomE=nomE then
+				return L;
+			else
+				return recherche_pteur_emp(L.suiv, nomE);
+			end if;
+		else
+			return NULL;
+		end if;
+end recherche_pteur_emp;
+
 ---------------------------------------------------------------------------------------  
 
 Procedure Saisie_T_Date(date: out T_Date) is
@@ -169,9 +184,9 @@ Procedure Affiche_Employe (L: in out T_Liste_Employe; dateDuJour : T_Date) is
 				put("Non");new_line; 
 			else
 				put("Retour le");
-				put(L.Employe.Retour.jour); put("/"); 
-				put(L.Employe.Retour.mois); put("/");
-				put(L.Employe.Retour.annee); new_line; 
+				put(L.Employe.Retour.jour,2); put("/"); 
+				put(L.Employe.Retour.mois,2); put("/");
+				put(L.Employe.Retour.annee,4); new_line; 
 			end if;
 			put("Disponibe : ");
 			if L.Employe.Disponible=true then
@@ -180,9 +195,9 @@ Procedure Affiche_Employe (L: in out T_Liste_Employe; dateDuJour : T_Date) is
 				put("Non"); new_line;
 			end if;
 			put("Nombre d audit : ");
-			put(L.Employe.Nb_audit); new_line;
+			put(L.Employe.Nb_audit,3); new_line;
 			put("Nombre de jours en audit : ");
-			put(L.Employe.Nb_jours_audit);
+			put(L.Employe.Nb_jours_audit,4);
 			new_line;
 			Affiche_Employe(L.suiv, dateDuJour);			
 		end if;

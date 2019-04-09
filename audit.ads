@@ -37,7 +37,6 @@ Package audit is
 		Employe : T_Liste_Employe ; 
 		Entreprise : T_Liste_Entreprise ;
 		Reporte : boolean ;
-		--Resultat : T_Resultat;
 	end record ;
 	
 	Type T_UnAudit;

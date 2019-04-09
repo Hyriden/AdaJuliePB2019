@@ -18,6 +18,21 @@ end Compare_IdKit;
 
 -------------------------------------------------------------------------------------------- 
 
+function recherche_pteur_kit_id(L: T_Liste_Kit; Id: Integer) return T_Liste_Kit is
+	Begin
+		if L/=NULL then
+			if L.Kit.Identifiant=Id then
+				return L;
+			else
+				return recherche_pteur_kit_id(L.suiv, Id);
+			end if;
+		else
+			return NULL;
+		end if;
+end recherche_pteur_kit_id;
+
+-------------------------------------------------------------------------------------------- 
+
 Procedure Saisie_Nature (nat: out T_Nature) is
 	option: integer;
 	Begin
@@ -112,18 +127,18 @@ Procedure Affiche_Kit (L : in out T_Liste_Kit) is
 	Begin
 		if L/=NULL then
 			put("Nature du kit"); put(T_Nature'image(L.Kit.Nature)); new_line;
-			put("Identifiant du kit:"); Put(L.Kit.Identifiant); new_line;
+			put("Identifiant du kit:"); Put(L.Kit.Identifiant,4); new_line;
 			put("Actuellement utilise:");
 			if L.Kit.Utilise then
 				put("Oui");
 			else
 				put("Non");
 			end if;	new_line;
-	        put("Nombre d'utilisation du kit:"); Put(L.Kit.Nb_Utilisation); new_line;
+	        put("Nombre d'utilisation du kit:"); Put(L.Kit.Nb_Utilisation,3); new_line;
 			put("Date de peremption :");
-			put(L.Kit.Date_peremption.jour); put("/");
-			put(L.Kit.Date_peremption.mois); put("/");
-			put(L.Kit.Date_peremption.annee); new_line;   
+			put(L.Kit.Date_peremption.jour,2); put("/");
+			put(L.Kit.Date_peremption.mois,2); put("/");
+			put(L.Kit.Date_peremption.annee,4); new_line;   
 			Affiche_Kit(L.suiv);  
 		end if;
 End Affiche_Kit;

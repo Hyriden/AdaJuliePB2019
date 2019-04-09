@@ -2,6 +2,7 @@ with Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entrepri
 use  Ada.Text_IO, Ada.Integer_Text_IO, Ada.Float_Text_IO, employe, kit, entreprise, audit;
 
 package body archivage is
+	
 
 	Procedure Passage_au_lendemain(EnCours: in out T_TF_Liste_Audit; Urgence, Routine: in out T_TF_File_Demande; LEtete: in out T_tete_Liste_Employe; LKtete: in out T_tete_Liste_Kit; LEntete: in out T_tete_Liste_Entreprise; dateDuJour: in out T_Date) is 
 		Begin	
@@ -27,30 +28,28 @@ package body archivage is
 				when 2 =>
 					if (date.annee mod 4=0 and date.annee mod 100/=0) or date.annee mod 400=0 then
 						if j>29 then
-							if d.mois/=12 then
-								d.mois:=d.mois+1;
-							else 
-								d.mois:=1;
-								d.annee:=d.annee+1;
-							end if;
+							d.mois:=d.mois+1;
 							j:=j-29;
 							d.jour:=1;
 							return retourne_date(d, j-1);
+						elsif j>1 then
+							d.jour:=31;
+							d.mois:=d.mois-1;
+							return retourne_date(d, j);
 						else
 							d.jour:=j;
 							return d;
 						end if;
 					else 
 						if j>28 then
-							if d.mois/=12 then
-								d.mois:=d.mois+1;
-							else 
-								d.mois:=1;
-								d.annee:=d.annee+1;
-							end if;
+							d.mois:=d.mois+1;
 							j:=j-28;
 							d.jour:=1;
 							return retourne_date(d, j-1);
+						elsif j>1 then
+							d.jour:=31;
+							d.mois:=d.mois-1;
+							return retourne_date(d, j);
 						else
 							d.jour:=j;
 							return d;
@@ -58,15 +57,14 @@ package body archivage is
 					end if;		
 				when 4 | 6 | 9 | 11 =>
 					if j>30 then
-						if d.mois/=12 then
-							d.mois:=d.mois+1;
-						else 
-							d.mois:=1;
-							d.annee:=d.annee+1;
-						end if;
+						d.mois:=d.mois+1;
 						j:=j-30;
 						d.jour:=1;
 						return retourne_date(d, j-1);
+					elsif j>1 then
+						d.jour:=31;
+						d.mois:=d.mois-1;
+						return retourne_date(d, j);
 					else
 						d.jour:=j;
 						return d;
@@ -82,12 +80,38 @@ package body archivage is
 						j:=j-31;
 						d.jour:=1;
 						return retourne_date(d, j-1);
+					elsif j>1 then
+						d.jour:=30;
+						if d.mois/=1 then
+							d.mois:=d.mois-1;
+						else
+							d.mois:=12;
+							d.annee:=d.annee-1;
+						end if;
+						return retourne_date(d, j);	
 					else
 						d.jour:=j;
 						return d;
 					end if;
 			end case;
 	end retourne_date;
+	
+	
+	--procedure Archivage_Audit_en_cours(Audit: in T_Audit_en_cours) is
+	
+--		use P_Fichier_archive;
+--		File:P_Fichier_archive.file_type;
+	--	begin
+	--		begin
+	--		open(File,append_file,"Archive.txt"); 
+	--		exception
+	--			when others=>create(File,name=>"Archive.sortie");
+	--		end;
+	--	if Audit.existe then
+	--		Write(File,Audit);
+	--	end if;
+	--	close(File);
+	--end Archivage_Audit_en_cours;
 	
 	
 			

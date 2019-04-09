@@ -71,11 +71,13 @@ Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; d
 		end if;
 end Insertion_Liste_Demande;
 
+-------------------------------------------------------------------------------------------- 
 
 Procedure Insertion_Urgence(Urgence: in out T_TF_File_Demande; DA: in T_Demande_Audit) is 
 U:T_File_Demande;
+val:boolean;
 	Begin
-		U:=Urgence.tete;
+		U:=Urgence.tete.suiv;
 		if Urgence.tete=NULL then
 			Urgence.tete := new T_UneFile_Demande'(DA,NULL);
 			Urgence.fin := Urgence.tete;
@@ -85,20 +87,16 @@ U:T_File_Demande;
 			while U/=Null loop
 				if U.Demande_Audit.Duree>DA.Duree then
 					U:= new T_UneFile_Demande'(DA,U);
+					val:=true;
 				else
 					U:=U.suiv;
 				end if;
 			end loop;
-			if U=NULL then
+			if U=NULL and val=false then
 				Urgence.fin.suiv:=new T_UneFile_Demande'(DA,NULL);
 			end if;	
 		end if;		
-end Insertion_Urgence;
-
-
-
-	
-
+end Insertion_Urgence;	
 
 -------------------------------------------------------------------------------------------- 
 
@@ -160,12 +158,12 @@ end Supprime_Routine_demande_audit;
 Procedure Affiche_liste_audit (File: in out T_File_Demande) is
 	Begin
 		if File/=NULL then	
-			put("Demande n "); put(File.Demande_Audit.Numero); new_line;
+			put("Demande n "); put(File.Demande_Audit.Numero,4); new_line;
 			put("Date au plus tot :");
-			put(File.Demande_Audit.DateAuPlusTot.jour); put("/");
-			put(File.Demande_Audit.DateAuPlusTot.mois); put("/");
-			put(File.Demande_Audit.DateAuPlusTot.annee); new_line;  
-			put("Duree necessaire:"); put(File.Demande_Audit.Duree); new_line;
+			put(File.Demande_Audit.DateAuPlusTot.jour,2); put("/");
+			put(File.Demande_Audit.DateAuPlusTot.mois,2); put("/");
+			put(File.Demande_Audit.DateAuPlusTot.annee,4); new_line;  
+			put("Duree necessaire:"); put(File.Demande_Audit.Duree,4); new_line;
 			if File.Demande_Audit.Urgence then
 				put("Urgence"); new_line;
 			else
@@ -202,7 +200,7 @@ Procedure Insertion_liste_audit_en_cours (Urgence, Routine: in out T_TF_File_Dem
 					Lekit:=kit_disponible(LKtete.tete, Lekit, AD.Demande_Audit.Nature);
 					
 					if Lemploye/=NULL and Lekit/=NULL then
-						put("Debut de l'audit numero:");put(AD.Demande_Audit.Numero);new_line;						
+						put("Debut de l'audit numero:");put(AD.Demande_Audit.Numero,4);new_line;						
 						AeC.NumeroA:= AD.Demande_Audit.Numero;
 						AeC.Date_debut:= dateDuJour;
 						AeC.Duree:= AD.Demande_Audit.Duree;
@@ -234,27 +232,31 @@ Procedure Insertion_liste_audit_en_cours (Urgence, Routine: in out T_TF_File_Dem
 end Insertion_liste_audit_en_cours;	
 							
 -------------------------------------------------------------------------------------------- 
-							
-Procedure Ajout_en_cours(AeC: in T_Audit_en_cours; EnCours: in out T_TF_Liste_Audit) is
-	Procedure Ajout_Liste_En_cours(AeC: in T_Audit_en_cours; A_EnCours: in out T_Liste_Audit) is
-		Begin 
-			if A_EnCours = NULL then
-				A_EnCours:= new T_UnAudit'(AeC, NULL);
-			else
-				if AeC.Duree<A_EnCours.Audit.Duree then
-					A_EnCours:= new T_UnAudit'(AeC, A_EnCours);
-				else
-					Ajout_Liste_En_cours(AeC, A_EnCours.suiv);
-				end if;
-			end if;
-	end Ajout_Liste_En_cours;	
+
+Procedure Ajout_en_cours(AeC: in T_Audit_en_cours; EnCours: in out T_TF_Liste_Audit) is 
+A:T_Liste_Audit;
+bool, val:boolean:=false;
 	Begin
-		if EnCours.tete = NULL then
-			EnCours.tete:= new T_UnAudit'(AeC, EnCours.tete);
-		else		
-			Ajout_Liste_En_Cours(AeC, EnCours.tete);
-		end if;
-end Ajout_en_cours;
+		A:=EnCours.tete.suiv;
+		bool:=Compare_T_Date(EnCours.tete.audit.date_fin, AeC.date_fin);
+		if EnCours.tete=NULL then
+			EnCours.tete := new T_UnAudit'(AeC,NULL);
+		elsif bool then
+			EnCours.tete:= new T_UnAudit'(AeC,EnCours.tete.suiv);
+		else	
+			while A/=Null loop
+				if bool then
+					A:= new T_UnAudit'(AeC,A);
+					val:=true;
+				else
+					A:=A.suiv;
+				end if;
+			end loop;
+			if A=NULL and val=false then
+				A:=new T_UnAudit'(AeC,NULL);
+			end if;	
+		end if;		
+end Ajout_en_cours;	
 
 -------------------------------------------------------------------------------------------- 
 		

@@ -17,6 +17,21 @@ Begin
 	end if;
 end Compare_entreprise;
 	
+--------------------------------------------------------------------------------------------
+	
+function recherche_pteur_ent(L: T_Liste_Entreprise; nom: T_Mot) return T_Liste_Entreprise is
+	Begin
+		if L/=NULL then
+			if L.Entreprise.Nom=nom then
+				return L;
+			else
+				return recherche_pteur_ent(L.suiv, nom);
+			end if;
+		else
+			return NULL;
+		end if;
+end recherche_pteur_ent;	
+	
 -------------------------------------------------------------------------------------------- 	
 
 Procedure Saisie_Entreprise (E : out T_Entreprise) is
@@ -30,12 +45,14 @@ Procedure Saisie_Entreprise (E : out T_Entreprise) is
 		put_line("Tapez 1 pour Positif");
 		put_line("Tapez 2 pour Negatif");
 		put_line("Tapez 3 pour Problematique");
+		put_line("Tapez 4 pour Sans_audit");
 		get(option);
 		loop
 			case option is
 				when 1 => E.Resulat_Dernier_Audit := Positif; exit;
 		    	when 2 => E.Resulat_Dernier_Audit := Negatif; exit;
 		    	when 3 => E.Resulat_Dernier_Audit := Problematique; exit;
+		    	when 4 => E.Resulat_Dernier_Audit := sans_audit; exit;				
 				when others => put ("Votre saisie est erronee, ressaisissez..");
 			end case;
 		end loop;

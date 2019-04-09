@@ -39,6 +39,7 @@ package employe is
 -- Fonctions et procedures
 Procedure Saisie_T_Mot(mot: out T_Mot);
 Function Compare_nom(L: T_Liste_Employe; E: T_Employe) return boolean;
+function recherche_pteur_emp(L: T_Liste_Employe; nomE: T_Mot) return T_Liste_Employe;
 Procedure Saisie_T_Date(date: out T_Date);
 Function Compare_T_Date(date1, date2: T_Date) return boolean;
 Function Saisie_Profession return boolean;

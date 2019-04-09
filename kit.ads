@@ -30,6 +30,7 @@ package kit is
 
 	Procedure Saisie_Nature (nat: out T_Nature);
 	Function Compare_IdKit(L:T_Liste_Kit; Id: Integer) return boolean;
+	function recherche_pteur_kit_id(L: T_Liste_Kit; Id: Integer) return T_Liste_Kit;
 	Procedure Saisie_Kit (K : in out T_Kit; tete : in out T_Liste_Kit; dateDuJour: in T_Date);
 	Procedure Ajout_Kit(Ltete: in out T_tete_Liste_Kit; dateDuJour: in T_Date);
 	Procedure Suppr_Kit (T_t_Kit: in out T_tete_Liste_Kit);

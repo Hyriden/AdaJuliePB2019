@@ -48,7 +48,7 @@ dateDuJour: T_Date;
 				Menu(Choix);
 				case Choix is
 					when '0' => Saisie_T_Date(dateDuJour);
-						put("Nous somme le:"); 
+						put("Nous sommes le:"); 
 						put(dateDuJour.jour);put("/"); 
 						put(dateDuJour.mois);put("/"); 
 						put(dateDuJour.annee); new_line;					

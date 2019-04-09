@@ -77,7 +77,7 @@ Procedure Insertion_Urgence(Urgence: in out T_TF_File_Demande; DA: in T_Demande_
 U:T_File_Demande;
 val:boolean;
 	Begin
-		U:=Urgence.tete.suiv;
+		U:=Urgence.tete;
 		if Urgence.tete=NULL then
 			Urgence.tete := new T_UneFile_Demande'(DA,NULL);
 			Urgence.fin := Urgence.tete;
@@ -237,11 +237,13 @@ Procedure Ajout_en_cours(AeC: in T_Audit_en_cours; EnCours: in out T_TF_Liste_Au
 A:T_Liste_Audit;
 bool, val:boolean:=false;
 	Begin
-		A:=EnCours.tete.suiv;
-		bool:=Compare_T_Date(EnCours.tete.audit.date_fin, AeC.date_fin);
-		if EnCours.tete=NULL then
+		A:=EnCours.tete;
+		if A/=Null then
+			bool:=Compare_T_Date(EnCours.tete.audit.date_fin, AeC.date_fin);
+		else
 			EnCours.tete := new T_UnAudit'(AeC,NULL);
-		elsif bool then
+		end if;
+		if bool then
 			EnCours.tete:= new T_UnAudit'(AeC,EnCours.tete.suiv);
 		else	
 			while A/=Null loop

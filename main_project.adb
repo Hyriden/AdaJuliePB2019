@@ -81,7 +81,6 @@ Begin
     Kit.Nb_utilisation := 2;
     Kit.Date_peremption := retourne_date(dateDuJour,730);
 	Kit.Utilise:= true ;
-	
     LKtete.tete:=new T_UnKit'(Kit,LKtete.tete);
    
     Kit.Identifiant := 21328;
@@ -96,7 +95,7 @@ Begin
     Audit.DateAuPlusTot := retourne_date(dateDuJour,-2);
     Audit.Profession := False;
     Audit.Entreprise := "MANGETOUT"&(10..30=>' ');
-    Audit.Nature := T_Nature'Value("analyse");
+    Audit.Nature := T_Nature'Value("Analyse_Composition");
     Insertion_Urgence(Urgence, Audit);   
 	
     Audit.Numero := 12;

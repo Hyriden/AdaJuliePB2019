@@ -32,7 +32,7 @@ package body archivage is
 							j:=j-29;
 							d.jour:=1;
 							return retourne_date(d, j-1);
-						elsif j>1 then
+						elsif j<1 then
 							d.jour:=31;
 							d.mois:=d.mois-1;
 							return retourne_date(d, j);
@@ -46,7 +46,7 @@ package body archivage is
 							j:=j-28;
 							d.jour:=1;
 							return retourne_date(d, j-1);
-						elsif j>1 then
+						elsif j<1 then
 							d.jour:=31;
 							d.mois:=d.mois-1;
 							return retourne_date(d, j);
@@ -61,7 +61,7 @@ package body archivage is
 						j:=j-30;
 						d.jour:=1;
 						return retourne_date(d, j-1);
-					elsif j>1 then
+					elsif j<1 then
 						d.jour:=31;
 						d.mois:=d.mois-1;
 						return retourne_date(d, j);
@@ -80,7 +80,7 @@ package body archivage is
 						j:=j-31;
 						d.jour:=1;
 						return retourne_date(d, j-1);
-					elsif j>1 then
+					elsif j<1 then
 						d.jour:=30;
 						if d.mois/=1 then
 							d.mois:=d.mois-1;

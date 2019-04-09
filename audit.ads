@@ -80,6 +80,7 @@ Package audit is
 	Function Compare_NumeroAudit(F:T_File_Demande; Numero: Integer) return boolean;
 	Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Date; LTete : in out T_tete_Liste_Entreprise);
 	Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; dateDuJour : in T_Date; LTete : in out T_tete_Liste_Entreprise);
+	Procedure Insertion_Urgence(Urgence: in out T_TF_File_Demande; DA: in T_Demande_Audit);	
 	Procedure Insertion_Routine (Routine: in out T_TF_File_Demande; DA: in T_Demande_Audit);
 	Procedure Supprime_Urgence_demande_audit (Urgence: in out T_TF_File_Demande; Numero: in integer);
 	Procedure Supprime_Routine_demande_audit (Routine: in out T_TF_File_Demande; Numero: in integer);	

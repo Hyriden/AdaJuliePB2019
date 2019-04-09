@@ -153,24 +153,23 @@ end kit_disponible;
 -------------------------------------------------------------------------------------------- 
 
 Procedure KitPerime(T_t_Kit: in out T_tete_Liste_Kit; dateDuJour: in T_Date) is
-	Procedure Kitdepasse(T_t_Kit: in out T_tete_Liste_Kit; K: in out T_Liste_Kit; dateDuJour: in T_Date) is
-		bool:boolean;
-		Begin
-			if K/=NULL then						
-				if K.Kit.Utilise=false then
-					bool:=Compare_T_Date(K.Kit.Date_peremption, dateDuJour);
-					if bool=false then
-	--					archive_kit();
-						put("kit depasse"); new_line;
-						put(K.Kit.Identifiant); new_line;
-						Delete_Kit(T_t_Kit, K.Kit.Identifiant);
-					end if;
-				end if;
-				Kitdepasse(T_t_Kit, K.suiv, dateDuJour);
-			end if;
-	end Kitdepasse;
+	K:T_Liste_Kit;
+	bool:boolean;
 	Begin
-		Kitdepasse(T_t_Kit, T_t_Kit.tete, dateDuJour);
+		K:=T_t_Kit.tete;
+		while K/=NULL loop 			
+			if K.Kit.Utilise=false then
+				bool:=Compare_T_Date(K.Kit.Date_peremption, dateDuJour);
+				if bool=false then
+	--					archive_kit();
+					if K=T_t_Kit.tete then			
+    					T_t_Kit.tete := T_t_Kit.tete.suiv;
+  					end if;
+					
+						K := K.suiv;				
+				end if;
+			end if;
+		end loop;
 end KitPerime;
 
 

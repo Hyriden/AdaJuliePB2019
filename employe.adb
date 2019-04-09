@@ -18,6 +18,21 @@ end Saisie_T_Mot;
 
 ---------------------------------------------------------------------------------------  
 
+Function Compare_nom(L: T_Liste_Employe; E: T_Employe) return boolean is
+Begin
+	if L/=NULL then
+		if L.Employe.NomE=E.nomE and L.Employe.prenomE=E.prenomE then
+			return false;
+		else
+			return Compare_nom(L.suiv, E);
+		end if;
+	else
+		return true;
+	end if;
+end Compare_nom;
+
+---------------------------------------------------------------------------------------  
+
 Procedure Saisie_T_Date(date: out T_Date) is
 	Begin
 		loop
@@ -101,9 +116,15 @@ Procedure Saisie_Employe (E: in out T_Employe) is
 
 Procedure Recrutement (tete : in out T_Liste_Employe) is
 	E : T_Employe;
+	bool:boolean;
 	Begin
 		Saisie_Employe(E);
-		tete:=new T_UnEmploye'(E,tete);
+		bool:=Compare_nom(tete, E);
+		if bool then
+			tete:=new T_UnEmploye'(E,tete);
+		else
+			put("Employe deja existant");
+		end if;
 end Recrutement;
 
 ---------------------------------------------------------------------------------------      

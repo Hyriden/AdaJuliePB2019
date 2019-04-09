@@ -79,7 +79,7 @@ Procedure Suppr_Kit (T_t_Kit: in out T_tete_Liste_Kit) is
 	bool: boolean;
 	Begin
 		loop
-			put_line("Veuillez saisir l'identifiant du kit à supprimer");
+			put_line("Veuillez saisir l'identifiant du kit a supprimer");
 			get(Identifiant); new_line;
 			bool:=Compare_IdKit(T_t_Kit.tete, Identifiant);
 			exit when bool=false;
@@ -91,22 +91,18 @@ end Suppr_Kit;
 -------------------------------------------------------------------------------------------- 
 
 Procedure Delete_Kit(T_t_Kit: in out T_tete_Liste_Kit; Identifiant: in integer) is
-	Procedure Del_Kit(L : in out T_Liste_Kit; Identifiant: in integer) is
-		Begin
-			if L/=NULL then
-				if L.Kit.Identifiant=Identifiant then
-					L:=L.suiv;
-				end if;
-				Del_Kit(L.suiv, Identifiant);
-			end if;
-	end Del_Kit;	
+	TK:T_Liste_Kit;
 	Begin
-		if T_t_Kit.tete/=NULL then
-			if T_t_Kit.tete.Kit.Identifiant=Identifiant then
-				T_t_Kit.tete:=T_t_Kit.tete.suiv;
-			end if;
+   		TK := T_t_Kit.tete;		
+		if Identifiant=TK.Kit.Identifiant and TK.Kit.Utilise=false then			
+        	T_t_Kit.tete := T_t_Kit.tete.suiv;
 		else
-			Del_Kit(T_t_Kit.tete, Identifiant);
+      		while TK.suiv.Kit.Identifiant /= Identifiant loop
+    			TK := TK.suiv;
+			end loop;
+     		if TK.suiv.Kit.Utilise = false then 
+           		TK.suiv := TK.suiv.suiv;
+      		end if;
 		end if;
 end Delete_Kit;
 		
@@ -160,11 +156,13 @@ Procedure KitPerime(T_t_Kit: in out T_tete_Liste_Kit; dateDuJour: in T_Date) is
 	Procedure Kitdepasse(T_t_Kit: in out T_tete_Liste_Kit; K: in out T_Liste_Kit; dateDuJour: in T_Date) is
 		bool:boolean;
 		Begin
-			if K/=NULL then
+			if K/=NULL then						
 				if K.Kit.Utilise=false then
 					bool:=Compare_T_Date(K.Kit.Date_peremption, dateDuJour);
 					if bool=false then
 	--					archive_kit();
+						put("kit depasse"); new_line;
+						put(K.Kit.Identifiant); new_line;
 						Delete_Kit(T_t_Kit, K.Kit.Identifiant);
 					end if;
 				end if;

@@ -21,6 +21,7 @@ package employe is
     	Retour : T_Date ;
     	Disponible : boolean := true ; -- true si pas en audit
     	Nb_jours_audit : integer := 0 ;
+		Nb_audit : integer := 0 ;
 	end record ;
 
 	Type T_UnEmploye ;
@@ -42,8 +43,8 @@ Function Compare_T_Date(date1, date2: T_Date) return boolean;
 Function Saisie_Profession return boolean;
 Procedure Saisie_Employe (E: in out T_Employe);
 Procedure Recrutement (tete : in out T_Liste_Employe);
-Procedure Depart (T_T_Employe: in out T_tete_Liste_Employe);
-Procedure Affiche_Employe (L: in out T_Liste_Employe);
+Procedure Depart(FT_t_Employe: in out T_tete_Liste_Employe);
+Procedure Affiche_Employe (L: in out T_Liste_Employe; dateDuJour : T_Date);
 Procedure Depart_Conges (L: in out T_Liste_Employe; dateDuJour : T_Date);
 Function employe_disponible(E, noob: T_Liste_Employe; Profession: boolean; dateDuJour: T_Date) return T_Liste_Employe;
 

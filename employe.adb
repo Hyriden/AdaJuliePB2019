@@ -108,33 +108,30 @@ end Recrutement;
 
 ---------------------------------------------------------------------------------------      
 
-Procedure Depart (T_t_Employe: in out T_tete_Liste_Employe) is 
+Procedure Depart(FT_t_Employe: in out T_tete_Liste_Employe) is
 	E:T_Employe;
-	Procedure Supp_Employe (L: in out T_Liste_Employe; E: in out T_Employe) is 
-		Begin
-			if L=NULL then
-				put("Employe non trouve ou indisponible");
-			else
-				if E.NomE=L.Employe.NomE and E.PrenomE=L.Employe.PrenomE and E.Profession=L.Employe.Profession and L.Employe.Disponible then
-					L:=L.suiv;
-				end if;
-				Supp_Employe(L.suiv, E);
-			end if;
-	end Supp_Employe;
+	TE :T_Liste_Employe;
 	Begin
+   		TE := FT_t_Employe.Tete;
 		Saisie_Employe(E);
-		if T_t_Employe.tete /= NULL then
-			if T_t_Employe.tete.Employe.NomE=E.NomE and T_t_Employe.tete.Employe.PrenomE=E.PrenomE then
-				T_t_Employe.tete:=T_t_Employe.tete.suiv;
-			end if;
+		if E.NomE=TE.Employe.NomE and E.PrenomE=TE.Employe.PrenomE and E.Profession=TE.Employe.Profession then			
+        	FT_t_Employe.tete := FT_t_Employe.tete.suiv;
 		else
-			Supp_Employe(T_t_Employe.tete, E);
+      		while TE.suiv.employe.nomE /= E.nomE loop
+    			TE := TE.suiv;
+			end loop;
+     		if TE.suiv.employe.Disponible = False then 
+        		Put("Cet employe est en audit"); new_line;
+    		else
+           		TE.suiv := TE.suiv.suiv;
+      		end if;
 		end if;
 end Depart;
 
 ---------------------------------------------------------------------------------------  
          
-Procedure Affiche_Employe (L: in out T_Liste_Employe) is
+Procedure Affiche_Employe (L: in out T_Liste_Employe; dateDuJour : T_Date) is
+	bool:boolean;
 	Begin
 		if L /= null then
 			put("Nom : "); put(L.Employe.NomE); new_line; 
@@ -146,38 +143,41 @@ Procedure Affiche_Employe (L: in out T_Liste_Employe) is
 				put_line("Ingenieur");
 			end if;
 			put("Conge : ");
-			if L.Employe.Retour.Annee=0 then
+			bool:=Compare_T_Date(L.Employe.Retour, dateDuJour);
+			if bool=false then
 				put("Non");new_line; 
 			else
 				put("Retour le");
 				put(L.Employe.Retour.jour); put("/"); 
 				put(L.Employe.Retour.mois); put("/");
 				put(L.Employe.Retour.annee); new_line; 
-      	  		L := L.suiv;
 			end if;
 			put("Disponibe : ");
-			if L.Employe.Disponible then
+			if L.Employe.Disponible=true then
 				put("Oui"); new_line;
 			else
 				put("Non"); new_line;
 			end if;
+			put("Nombre d audit : ");
+			put(L.Employe.Nb_audit); new_line;
 			put("Nombre de jours en audit : ");
 			put(L.Employe.Nb_jours_audit);
 			new_line;
-			Affiche_Employe(L.suiv);			
+			Affiche_Employe(L.suiv, dateDuJour);			
 		end if;
 End Affiche_Employe;
 
 ---------------------------------------------------------------------------------------  
        
-Procedure Depart_Conges (L: in out T_Liste_Employe; dateDuJour : T_Date) is
-	Procedure esclave (L: in out T_Liste_Employe; E: T_Employe; dateRetour : T_Date) is
+Procedure Depart_Conges(L: in out T_Liste_Employe; dateDuJour : T_Date) is
+	Procedure esclave(L: in out T_Liste_Employe; E: T_Employe; dateRetour : T_Date) is
 		Begin
 			if L=NULL then
-				put("Employe actuellement en audit, la prise de conges est impossible");
+				put("Employe indisponible, la prise de conges est impossible"); new_line;
 			else
 				if L.Employe.NomE=E.NomE and L.Employe.prenomE=E.prenomE and L.Employe.Disponible then
 					L.Employe.Retour:=dateRetour;
+					put("Depart en conge de l employe: "); put(L.Employe.NomE); put(L.Employe.prenomE); new_line;
 				else
 					esclave(L.suiv, E, dateRetour);
 				end if;
@@ -189,7 +189,6 @@ Procedure Depart_Conges (L: in out T_Liste_Employe; dateDuJour : T_Date) is
 	Begin
 		Saisie_Employe(E);
 		put_line("Saisir la date du retour de l'employe");
-		Saisie_T_Date(dateRetour);
 		loop
 			Saisie_T_Date(dateRetour);
 			bool:=Compare_T_Date(dateRetour, dateDuJour);

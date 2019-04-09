@@ -7,9 +7,12 @@ Package archivage is
 	Function retourne_date(date: T_date; nbj: integer) return T_Date;
 
 
-
-
-
-
-
 end archivage;
+
+
+
+
+
+
+
+

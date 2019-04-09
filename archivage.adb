@@ -10,7 +10,7 @@ package body archivage is
 			put(dateDuJour.jour);put("/"); 
 			put(dateDuJour.mois);put("/"); 
 			put(dateDuJour.annee); new_line;
-			
+						
 			KitPerime(LKtete, dateDuJour);
 			Insertion_liste_audit_en_cours(Urgence, Routine, dateDuJour, EnCours, LEtete, LKtete, LEntete);
 			Actualisation(EnCours, Routine, EnCours.tete, dateDuJour);			
@@ -34,7 +34,8 @@ package body archivage is
 								d.annee:=d.annee+1;
 							end if;
 							j:=j-29;
-							return retourne_date(d, j);
+							d.jour:=1;
+							return retourne_date(d, j-1);
 						else
 							d.jour:=j;
 							return d;
@@ -48,8 +49,8 @@ package body archivage is
 								d.annee:=d.annee+1;
 							end if;
 							j:=j-28;
-							d.jour:=j;
-							return retourne_date(d, j);
+							d.jour:=1;
+							return retourne_date(d, j-1);
 						else
 							d.jour:=j;
 							return d;
@@ -64,8 +65,8 @@ package body archivage is
 							d.annee:=d.annee+1;
 						end if;
 						j:=j-30;
-						d.jour:=j;
-						return retourne_date(d, j);
+						d.jour:=1;
+						return retourne_date(d, j-1);
 					else
 						d.jour:=j;
 						return d;
@@ -79,8 +80,8 @@ package body archivage is
 							d.annee:=d.annee+1;
 						end if;
 						j:=j-31;
-						d.jour:=j;
-						return retourne_date(d, j);
+						d.jour:=1;
+						return retourne_date(d, j-1);
 					else
 						d.jour:=j;
 						return d;

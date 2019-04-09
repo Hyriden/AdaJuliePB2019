@@ -9,7 +9,7 @@ Package audit is
 		DateAuPlusTot : T_Date ;
 		Duree : T_Duree ;
 		Urgence : boolean ; 
-		Entreprise : T_Mot ;
+		Entreprise : T_Mot :=(others =>' ');
 		Nature : T_Nature ;
 		Profession : boolean;
 		Reporte : boolean := false ;
@@ -32,12 +32,12 @@ Package audit is
 		NumeroA : integer ;
 		Date_debut : T_Date ;
 		Date_fin : T_Date ;
-		Duree, DureeS : T_Duree ;
+		Duree : T_Duree ;
 		Kit : T_Liste_Kit ;
 		Employe : T_Liste_Employe ; 
 		Entreprise : T_Liste_Entreprise ;
-		Resultat : T_Resultat;
-		Reporte : boolean ;		
+		Reporte : boolean ;
+		--Resultat : T_Resultat;
 	end record ;
 	
 	Type T_UnAudit;
@@ -47,16 +47,39 @@ Package audit is
 		suiv : T_Liste_Audit ; 
 	end record;
 	
-	Type T_TF_Liste_Audit is record 
+	Type T_tf_Liste_Audit is record 
 		tete: T_Liste_Audit;
 	end record;
+	
+	Type T_Audit_Historique is record 
+		Numero : integer ;
+		Date_fin : T_Date ;
+		Duree : T_Duree ;
+		nature_Kit:T_Nature;
+		id_Kit : integer ;
+		Employe_nom : T_Mot:=(others =>' ') ; 
+		Employe_prenom : T_Mot:=(others =>' ') ; 
+		Resultat : T_Resultat ;
+	End record ;
+	
+	Type T_UnHistorique;
+	Type T_Liste_Historique is access T_UnHistorique ; 
+	Type T_UnHistorique is record
+		historique : T_Audit_Historique ;
+		suiv : T_Liste_Audit ; 
+	end record;
+	
+	Type T_t_Liste_Historique is record 
+		tete: T_Liste_Historique;
+	end record;
+	
 	
 	
 	--procedure 
 	
 	Function Compare_NumeroAudit(F:T_File_Demande; Numero: Integer) return boolean;
-	Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Date);
-	Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; dateDuJour : in T_Date);
+	Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Date; LTete : in out T_tete_Liste_Entreprise);
+	Procedure Insertion_Liste_Demande (Urgence, Routine: in out T_TF_File_Demande; dateDuJour : in T_Date; LTete : in out T_tete_Liste_Entreprise);
 	Procedure Insertion_Routine (Routine: in out T_TF_File_Demande; DA: in T_Demande_Audit);
 	Procedure Supprime_Urgence_demande_audit (Urgence: in out T_TF_File_Demande; Numero: in integer);
 	Procedure Supprime_Routine_demande_audit (Routine: in out T_TF_File_Demande; Numero: in integer);	

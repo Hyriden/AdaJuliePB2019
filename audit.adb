@@ -49,6 +49,7 @@ Procedure Saisie_Demande_Audit (DA: in out T_Demande_Audit; dateDuJour : in T_Da
 		end loop;
 		put("Saisir l entreprise concernee par l audit: ");
 		Saisie_T_Mot(DA.Entreprise);
+		bool:=false;
 		bool:=Compare_entreprise(LTete.tete, DA.Entreprise);
 		if bool then
 			put("L entreprise saisie n existe pas, veuillez l'ajouter"); new_line;
@@ -88,6 +89,7 @@ val:boolean;
 				if U.Demande_Audit.Duree>DA.Duree then
 					U:= new T_UneFile_Demande'(DA,U);
 					val:=true;
+					U:=U.suiv;
 				else
 					U:=U.suiv;
 				end if;
@@ -250,6 +252,7 @@ bool, val:boolean:=false;
 				if bool then
 					A:= new T_UnAudit'(AeC,A);
 					val:=true;
+					A:=A.suiv;
 				else
 					A:=A.suiv;
 				end if;

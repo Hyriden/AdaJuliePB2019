@@ -18,7 +18,7 @@ LKtete: in out T_tete_Liste_Kit;
 LEntete: in out T_tete_Liste_Entreprise;
 EnCours: in out T_TF_Liste_Audit;
 Urgence, Routine: in out T_TF_File_Demande;
-dateDuJour: T_Date) is
+dateDuJour: in out T_Date) is
 	
 	Employe:T_Employe;
 	Kit:T_Kit;
@@ -27,6 +27,8 @@ dateDuJour: T_Date) is
 	Auditencours:T_Audit_en_cours;
 	
 Begin
+	dateDuJour:=(10,04,2019);
+	
     Employe.NomE := "Trouvetout"&(11..30=>' ');
     Employe.PrenomE := "Marc"&(5..30=>' ');
     Employe.Profession := False;
@@ -306,7 +308,7 @@ end Lancement;
 				               when 'c' => NULL; 
 							   when others => put ("C'EST IMPOSSIBLE -> problème dans procedure MENU"); new_line;                                                                                
 				            end case;
-
+							
 
 				         when '4' => Put_Line("Bienvenue dans la partie gestion des audits");
 				            loop
